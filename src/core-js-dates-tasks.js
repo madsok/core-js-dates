@@ -195,8 +195,23 @@ function formatDate(date) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const day = 24 * 60 * 60 * 1000;
+  const vis = year % 4 === 0 ? 29 : 28;
+  const days = [31, vis, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  const start = new Date(year, month - 1, 1);
+
+  let count = 0;
+
+  for (let i = 0; i < days[month - 1]; i += 1) {
+    if (start.getDay() === 6 || start.getDay() === 0) {
+      count += 1;
+    }
+    start.setTime(start.getTime() + day);
+  }
+
+  return count;
 }
 
 /**
@@ -212,8 +227,12 @@ function getCountWeekendsInMonth(/* month, year */) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  throw new Error('Not implemented');
+function getWeekNumberByDate(date) {
+  const start = new Date(date.getFullYear(), 0, 4);
+
+  const days = (date - start) / 1000 / 60 / 60 / 24;
+
+  return Math.ceil((days + 4) / 7);
 }
 
 /**
@@ -227,8 +246,14 @@ function getWeekNumberByDate(/* date */) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  const day = 24 * 60 * 60 * 1000;
+
+  do {
+    date.setTime(date.getTime() + day);
+  } while (date.getDay() !== 5 || date.getDate() !== 13);
+
+  return date;
 }
 
 /**
@@ -242,8 +267,12 @@ function getNextFridayThe13th(/* date */) {
  * Date(2024, 5, 1) => 2
  * Date(2024, 10, 10) => 4
  */
-function getQuarter(/* date */) {
-  throw new Error('Not implemented');
+function getQuarter(date) {
+  const month = date.getMonth();
+  if (month >= 0 && month < 3) return 1;
+  if (month >= 3 && month < 6) return 2;
+  if (month >= 6 && month < 9) return 3;
+  return 4;
 }
 
 /**
